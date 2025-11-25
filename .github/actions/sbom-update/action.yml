@@ -33,6 +33,6 @@ runs:
 
         # Use silkbomb to update the sbom.json file
         docker run --platform="linux/amd64" -i --rm -v $PWD:/pwd ${CONTAINER_IMAGE} \
-        update --sbom-in ${SBOM_IN_PATH} --purls /pwd/purls.txt --sbom-out ${SBOM_FILE_NAME} 
+        update --sbom-in /pwd/${SBOM_IN_PATH} --purls /pwd/purls.txt --sbom-out /pwd/${SBOM_FILE_NAME}
 
         echo "Generating SBOM file done."
