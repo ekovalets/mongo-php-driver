@@ -1,19 +1,14 @@
 name: Post-Merge SBOM Update
 
 on:
-  pull_request:
-    types: [closed]
-    
+  push:
+    branches:
+      - v1.21
     paths:
       - 'src/libmongoc/**'
       - 'src/libmongocrypt/**'
 
   workflow_dispatch:
-    inputs:
-      debug:
-        description: 'Enable debug mode'
-        required: false
-        default: 'false'
 
 permissions:
   contents: write
@@ -23,9 +18,7 @@ jobs:
   sbom:
     name: Generate SBOM and Create PR
     runs-on: ubuntu-latest
-    
-    if: github.event.pull_request.merged == true 
-    
+
     concurrency:
       group: sbom-${{ github.ref }}
       cancel-in-progress: false
