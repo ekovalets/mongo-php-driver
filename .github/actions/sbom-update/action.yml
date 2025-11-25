@@ -28,7 +28,7 @@ runs:
         LIBMONGOCRYPT_VERSION=$(cat ${PWD}/src/LIBMONGOCRYPT_VERSION_CURRENT | tr -d '[:space:]')
 
         # Generate purls file from stored versions
-        echo "pkg:github/mongodb/mongo-c-driver@${LIBMONGOC_VERSION}" > $PURLS_FILE
+        echo "pkg:github/mongodb/mongo-cc-driver@${LIBMONGOC_VERSION}" > $PURLS_FILE
         echo "pkg:github/mongodb/libmongocrypt@${LIBMONGOCRYPT_VERSION}" >> $PURLS_FILE
 
         # Use silkbomb to update the sbom.json file
