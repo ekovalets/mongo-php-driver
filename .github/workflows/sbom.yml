@@ -36,11 +36,25 @@ jobs:
       - name: Check for Changes in sbom.json
         id: git_status
         run: |
-          # Use git to check if the sbom.json file differs from the current commit
-          if git diff --exit-code sbom.json ; then
-            echo "HAS_CHANGES=false" >> $GITHUB_OUTPUT
+          # Filter to remove/normalize serialNumber and timestamp fields
+          JQ_NORMALIZER='del(.serialNumber) | del(.metadata.timestamp) | walk(if type == "object" and .timestamp then .timestamp = "TIMESTAMP_NORMALIZED" else . end)'
+          
+          # Check if the base file exists in Git (to prevent errors on first commit)
+          if ! git show HEAD:$SBOM_FILE > /dev/null 2>&1; then
+              echo "HAS_CHANGES=true" >> $GITHUB_OUTPUT
+              exit 0
+          fi
+          
+          # Compare the normalized committed version vs. the normalized current version
+          if diff -q \
+             <(git show HEAD:$SBOM_FILE | jq -r "$JQ_NORMALIZER") \
+             <(cat $SBOM_FILE | jq -r "$JQ_NORMALIZER"); then
+             
+             echo "HAS_CHANGES=false" >> $GITHUB_OUTPUT
+             echo "No changes detected in sbom.json"
           else
-            echo "HAS_CHANGES=true" >> $GITHUB_OUTPUT
+             echo "HAS_CHANGES=true" >> $GITHUB_OUTPUT
+             echo "Changes detected in sbom.json"
           fi
 
       - name: Create Pull Request
