@@ -20,7 +20,7 @@ runs:
         SBOM_IN_PATH: ${{ inputs.sbom_in_path }}
         CONTAINER_IMAGE: ${{ inputs.container_image }}
         SBOM_FILE_NAME: ${{ inputs.sbom_file_name }}
-        PURLS_FILE: "${PWD}/purls.txt"
+        PURLS_FILE: "${{ github.workspace }}/purls.txt"
       run: |
         set -eu
 
