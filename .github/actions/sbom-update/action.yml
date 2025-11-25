@@ -4,6 +4,9 @@ inputs:
   sbom_in_path:
     description: The path of the input sbom file.
     default: sbom.json
+  sbom_file_name:
+    description: The name of the output sbom file.
+    default: sbom.json
   container_image:
     description: "The container image to use"
     default: "artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0"
@@ -17,7 +20,7 @@ runs:
         SBOM_IN_PATH: ${{ inputs.sbom_in_path }}
         CONTAINER_IMAGE: ${{ inputs.container_image }}
         SBOM_FILE_NAME: ${{ inputs.sbom_file_name }}
-        PURLS_FILE="${PWD}/purls.txt"
+        PURLS_FILE: "${PWD}/purls.txt"
       run: |
         set -eu
 
@@ -29,7 +32,7 @@ runs:
         echo "pkg:github/mongodb/libmongocrypt@${LIBMONGOCRYPT_VERSION}" >> $PURLS_FILE
 
         # Use silkbomb to update the sbom.json file
-        docker run --platform="linux/amd64" -it --rm -v $PWD:/pwd ${CONTAINER_IMAGE} \
-        update --sbom-in /pwd/sbom.json --purls /pwd/purls.txt --sbom-out /pwd/sbom.json
+        docker run --platform="linux/amd64" -i --rm -v $PWD:/pwd ${CONTAINER_IMAGE} \
+        update --sbom-in ${SBOM_IN_PATH} --purls /pwd/purls.txt --sbom-out ${SBOM_FILE_NAME} 
 
         echo "Generating SBOM file done."
