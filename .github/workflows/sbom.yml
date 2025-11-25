@@ -31,7 +31,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Run SBOM Updater
-        uses: ./.github/actions/sbom
+        uses: ./.github/actions/sbom-update
 
       - name: Check for Changes in sbom.json
         id: git_status
