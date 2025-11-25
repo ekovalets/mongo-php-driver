@@ -22,7 +22,8 @@ jobs:
     concurrency:
       group: sbom-${{ github.ref }}
       cancel-in-progress: false
-
+    env:
+      SBOM_FILE: sbom.json
     steps:
       - name: Checkout repository (Base Branch)
         uses: actions/checkout@v4
@@ -35,8 +36,6 @@ jobs:
 
       - name: Check for Changes in sbom.json
         id: git_status
-        env:
-          SBOM_FILE: ${{ env.SBOM_FILE_NAME }}
         run: |
           set -e
           
